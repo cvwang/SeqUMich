@@ -1,0 +1,48 @@
+SeqUMich
+Authors: Sam Lu, Charles Wang, & Hui Jiang
+University of Michigan
+
+
+SeqUMich is a program that is able to process a file containing a set of query strings (e.g. .fa files) and determine which of those strings (usually each ~1000bp long) are contained within a given sequencing reads file (e.g. fastq files).
+
+
+SeqUMich works in three steps:
+1. Creating a binary file of the fastq file (if one has not already been specified)
+2. Creating a hash table to index the fastq file
+3. Aligning and scoring segments of the query string with reads
+
+
+Binary File
+Since most fastq files are far too large to store in memory, we first create a binary file of the fastq file to allow for fast access later in the scoring and alignment section. The binary file is generated in a straightforward sequential manner that preserves the order of the reads in the original fastq file. The first char of each stored read represents the size of the read to follow. The following letters specified by that initial char have been compressed from 4bp to 1 char (2 bits per bp and 8 bits per char). Depending on the program’s specified maximum length of each read (default 100, but user-adjustable) each represented read in the binary will have that specified number of chars (i.e. 25 chars for 100bp long read). Please refer to SeqUMich’s UROP poster for further clarification.
+
+
+Hash Table
+
+
+Alignment & Scoring
+
+
+Sample command line
+
+The following line will build a binary file (-i) as well as hash the fastq file and perform scoring and alignment (hashing and alignment always occur).
+
+./main -r short.fastq -t refMrna.fa -i binary_reads_short.bin -m 100 -b 0 > output_short.txt
+
+The following line will not build a binary file but use the provided bin file (-o) for read indexing. As usual the program will always hash the fastq file and perform scoring and alignment.
+
+./main -r short.fastq -t refMrna.fa -o binary_reads_short.bin -m 100 -b 0 > output_short.txt
+
+
+Future improvements
+
+This program still has much room for improvement and several features that need to be implemented:
+Saving hashtable of an indexed fastq file (clarification: essentially saving the prefix and suffix tables of our program).
+Debugging out of bound errors when dealing with large .fa files
+Removing redundant comparisons of the same reads and sections of the a target string
+Improving the complexity of the hash function for indexing the read files.
+Improving the user command 
+
+
+For further information, contact:
+Sam Lu: samlu@umich.edu
+Charles Wang: cvwang@umich.edu
